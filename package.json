@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint --fix . && prettier --write .",
+    "format": "prettier --write .",
     "preview": "vite preview",
     "prepare": "husky"
   },
@@ -15,8 +16,11 @@
     "react-dom": "^19.0.0"
   },
   "lint-staged": {
-    "*.{ts,tsx,mjs}": "eslint --fix",
-    "*.{ts,tsx,css,json,mjs}": "prettier --write"
+    "*.{ts,tsx,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,json}": "prettier --write"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
