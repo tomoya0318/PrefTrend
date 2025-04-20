@@ -17,12 +17,12 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...globals.browser,
-        ...globals.node
-      }
+        ...globals.node,
+      },
     },
     plugins: {
       js,
-      "simple-import-sort": pluginSimpleImportSort
+      "simple-import-sort": pluginSimpleImportSort,
     },
     rules: {
       // インポートの順序設定
@@ -47,12 +47,12 @@ export default defineConfig([
             // 8. その他のローカルインポート
             ["^\\./(?!.*\\.css$).*$", "^\\.(?!/?$)"],
             // 9. スタイルシートインポート
-            ["^.+\\.css$"]
-          ]
-        }
+            ["^.+\\.css$"],
+          ],
+        },
       ],
       "simple-import-sort/exports": "error",
-    }
+    },
   },
 
   // TypeScriptファイル用の設定
@@ -164,22 +164,19 @@ export default defineConfig([
       ],
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true }
-      ],
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "jsx-a11y/anchor-is-valid": [
         "error",
         {
           components: ["Link"],
           specialLink: ["to"],
-        }
+        },
       ],
       "jsx-a11y/label-has-associated-control": [
         "error",
         {
           assert: "either",
-        }
+        },
       ],
     },
   },
@@ -196,7 +193,7 @@ export default defineConfig([
         {
           case: "camelCase",
           // 正しい正規表現形式に修正
-          ignore: ["vite-env\\.d\\.ts$", ".*\\.d\\.ts$"]
+          ignore: ["vite-env\\.d\\.ts$", ".*\\.d\\.ts$"],
         },
       ],
     },
@@ -220,7 +217,7 @@ export default defineConfig([
             "^index\\.tsx$",
             ".*\\.slice\\.tsx$",
             ".*\\.context\\.tsx$",
-            ".*\\.hooks\\.tsx$"
+            ".*\\.hooks\\.tsx$",
           ],
         },
       ],
@@ -232,13 +229,6 @@ export default defineConfig([
 
   // 除外ディレクトリ設定
   {
-    ignores: [
-      "node_modules",
-      "dist",
-      "build",
-      "coverage",
-      ".eslintrc.cjs",
-      "vite.config.ts",
-    ],
+    ignores: ["node_modules", "dist", "build", "coverage", ".eslintrc.cjs", "vite.config.ts"],
   },
 ]);
