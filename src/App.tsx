@@ -1,35 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="mx-10 my-10 items-center border-2 border-primary">
+      <h1 className="mb-5 border-b-2 border-primary p-5 text-2xl text-primary">title</h1>
+      <h2 className="ml-2 inline-block w-auto border-2 border-secondary p-2">都道府県</h2>
+      <ul>
+        <li>北海道</li>
+        <li>青森県</li>
+      </ul>
+      <div>都道府県のグラフ</div>
+    </div>
+  );
 }
-
-export default App
