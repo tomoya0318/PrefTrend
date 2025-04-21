@@ -1,7 +1,7 @@
 import { Prefecture } from "../../types/api/prefecture";
 import { PrefectureCheckboxList } from "../organisms/PrefectureCheckboxList";
 
-interface DashboardTemplateProps {
+export interface DashboardTemplateProps {
   prefectures: Prefecture[];
   checkedPrefCodes: number[];
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
