@@ -8,8 +8,7 @@ interface PrefectureCheckboxProps {
 }
 /**
  * 都道府県チェックボックスコンポーネント
- * @param prefCode - 都道府県コード
- * @param prefName - 都道府県名
+ * @param prefecture - 都道府県データを受け取るオブジェクト
  * @param checked - チェック状態
  * @param onChange - チェック状態変更時のコールバック
  */
