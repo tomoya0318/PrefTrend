@@ -1,38 +1,25 @@
 import React from "react";
 
 export interface CheckboxProps {
-  /**
-   * チェックボックスのID（ラベルとの関連付けに使用）
-   */
   id?: string;
-  /**
-   * チェック状態
-   */
   checked: boolean;
-  /**
-   * チェック状態変更時のコールバック
-   */
   onChange: (checked: boolean) => void;
-  /**
-   * 無効状態
-   */
   disabled?: boolean;
-  /**
-   * 追加のCSSクラス
-   */
   className?: string;
-  /**
-   * アクセシビリティラベル
-   */
   "aria-label"?: string;
-  /**
-   * テスト用のdata属性
-   */
   "data-testid"?: string;
 }
 
 /**
  * Checkbox - 基本的なチェックボックスatomコンポーネント
+ * @param id - チェックボックスのID（ラベルとの関連付けに使用）
+ * @param checked - チェック状態
+ * @param onChange - チェック状態変更時のコールバック
+ * @param disabled - 無効状態
+ * @param className - 追加のCSSクラス
+ * @param ariaLabel - アクセシビリティラベル
+ * @param dataTestId - テスト用のdata属性
+ * @param props - その他のプロパティ
  */
 export function Checkbox({
   id,
