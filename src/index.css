@@ -1,74 +1,15 @@
 @import "tailwindcss";
 
-/* ベースとなるルート変数 */
 :root {
-  /* タイポグラフィ設定 */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  /* レンダリング設定 */
+  --background: #ffffff;
+  --foreground: #000000;
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* 基本カラー */
-  --foreground: #1f2937;
-  --background: #f3f4f6;
-  --background-light: #ffffff;
-  --text-light: #6b7280;
-
-  /* プライマリカラー */
-  --color-primary: #2563eb;
-  --color-secondary: #1e40af;
-
-  /* グラフカラー */
-  --color-graph-1: #3b82f6;
-  --color-graph-2: #0d9488;
-  --color-graph-3: #8b5cf6;
-  --color-graph-4: #ef4444;
-  --color-graph-5: #f97316;
-  --color-graph-6: #eab308;
-  --color-graph-7: #ec4899;
-  --color-graph-8: #6366f1;
-
-  /* 状態カラー */
-  --color-success: #10b981;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
-  --color-info: #60a5fa;
-
-  /* ベースカラー適用 */
-  color: var(--foreground);
-  background-color: var(--background);
-}
-
-/* テーマカラー変数のエクスポート */
-@theme {
-  /* ベースカラー */
-  --color-text: var(--foreground);
-  --color-text-light: var(--text-light);
-  --color-background: var(--background);
-  --color-background-light: var(--background-light);
-
-  /* プライマリカラー */
-  --color-primary: var(--color-primary);
-  --color-secondary: var(--color-secondary);
-
-  /* グラフカラー */
-  --color-graph-1: var(--color-graph-1);
-  --color-graph-2: var(--color-graph-2);
-  --color-graph-3: var(--color-graph-3);
-  --color-graph-4: var(--color-graph-4);
-  --color-graph-5: var(--color-graph-5);
-  --color-graph-6: var(--color-graph-6);
-  --color-graph-7: var(--color-graph-7);
-  --color-graph-8: var(--color-graph-8);
-
-  /* 状態カラー */
-  --color-success: var(--color-success);
-  --color-error: var(--color-error);
-  --color-warning: var(--color-warning);
-  --color-info: var(--color-info);
 }
