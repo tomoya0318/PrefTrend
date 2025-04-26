@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Prefecture } from "../../types/api/prefecture";
+import { Prefecture } from "../../types/domain/prefecture";
 import { DashboardTemplate } from "../templates/DashboardTemplate";
 
 const mockPrefectures: Prefecture[] = [
