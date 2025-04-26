@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import { Prefecture } from "../../../types/api/prefecture";
+import { Prefecture } from "../../../types/domain/prefecture";
 import type { DashboardTemplateProps } from "../DashboardTemplate";
 import { DashboardTemplate } from "../DashboardTemplate";
 

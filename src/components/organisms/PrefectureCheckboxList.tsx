@@ -1,4 +1,4 @@
-import { Prefecture } from "../../types/api/prefecture";
+import { Prefecture } from "../../types/domain/prefecture";
 import { PrefectureCheckbox } from "../molecules/PrefectureCheckbox";
 
 interface PrefectureCheckboxListProps {

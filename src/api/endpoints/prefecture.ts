@@ -1,4 +1,4 @@
-import { Prefecture } from "../../types/api/prefecture";
+import { Prefecture } from "../../types/domain/prefecture";
 import { fetcher } from "../fetcher";
 
 // 都道府県一覧を取得するAPI
