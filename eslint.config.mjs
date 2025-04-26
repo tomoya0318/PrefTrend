@@ -192,7 +192,6 @@ export default defineConfig([
         "error",
         {
           case: "camelCase",
-          // 正しい正規表現形式に修正
           ignore: ["vite-env\\.d\\.ts$", ".*\\.d\\.ts$"],
         },
       ],
@@ -210,7 +209,6 @@ export default defineConfig([
           cases: {
             pascalCase: true,
           },
-          // 正しい正規表現形式に修正
           ignore: [
             "^main\\.tsx$",
             "^router\\.tsx$",
@@ -218,6 +216,8 @@ export default defineConfig([
             ".*\\.slice\\.tsx$",
             ".*\\.context\\.tsx$",
             ".*\\.hooks\\.tsx$",
+            "^use[A-Z].*\\.tsx$",
+            "^use[A-Z].*\\.test\\.tsx$",
           ],
         },
       ],
