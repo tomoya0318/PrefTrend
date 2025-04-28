@@ -1,10 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { Prefecture } from "../../../types/domain/prefecture";
 import { PrefectureCheckbox } from "../PrefectureCheckbox";
-
-import "@testing-library/jest-dom";
 
 describe("PrefectureCheckbox component", () => {
   const mockPrefecture: Prefecture = {
@@ -15,11 +14,11 @@ describe("PrefectureCheckbox component", () => {
   const defaultProps = {
     prefecture: mockPrefecture,
     checked: false,
-    onChange: jest.fn(),
+    onChange: vi.fn(),
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("正しくレンダリングされる", () => {
@@ -54,7 +53,7 @@ describe("PrefectureCheckbox component", () => {
   });
 
   test("クリック時に正しい値でonChangeが呼ばれる", async () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const user = userEvent.setup();
 
     render(<PrefectureCheckbox checked={false} prefecture={mockPrefecture} onChange={onChange} />);
@@ -70,7 +69,7 @@ describe("PrefectureCheckbox component", () => {
   });
 
   test("ラベルをクリックしてもチェックボックスが反応する", async () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const user = userEvent.setup();
 
     render(<PrefectureCheckbox checked={false} prefecture={mockPrefecture} onChange={onChange} />);

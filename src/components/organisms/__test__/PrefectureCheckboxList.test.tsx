@@ -1,11 +1,9 @@
-// filepath: /Users/tomoya-n/dev/PrefTrend/src/components/organisms/__test__/PrefectureCheckboxList.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { Prefecture } from "../../../types/domain/prefecture";
 import { PrefectureCheckboxList } from "../PrefectureCheckboxList";
-
-import "@testing-library/jest-dom";
 
 describe("PrefectureCheckboxList component", () => {
   const mockPrefectures: Prefecture[] = [
@@ -18,11 +16,11 @@ describe("PrefectureCheckboxList component", () => {
   const defaultProps = {
     prefectures: mockPrefectures,
     checkedPrefCodes: [],
-    onPrefectureChange: jest.fn(),
+    onPrefectureChange: vi.fn(),
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("都道府県リストが正しくレンダリングされる", () => {
@@ -60,7 +58,7 @@ describe("PrefectureCheckboxList component", () => {
   });
 
   test("チェックボックスをクリックすると正しい引数でonPrefectureChangeが呼ばれる", async () => {
-    const onPrefectureChange = jest.fn();
+    const onPrefectureChange = vi.fn();
     const user = userEvent.setup();
 
     render(
@@ -81,7 +79,7 @@ describe("PrefectureCheckboxList component", () => {
   });
 
   test("チェック済みのチェックボックスをクリックすると、チェックが外れる", async () => {
-    const onPrefectureChange = jest.fn();
+    const onPrefectureChange = vi.fn();
     const user = userEvent.setup();
 
     render(
