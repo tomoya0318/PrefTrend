@@ -8,7 +8,7 @@ import { defaultConfig } from "../../api/fetcher";
 import { server } from "../../mocks/server";
 import { useGetPrefectures } from "../useGetPrefectures";
 
-// 環境変数からベースURLを取得（デフォルトではfetcher.tsの設定を使用）
+// 環境変数からベースURLを取得
 const API_BASE_URL = defaultConfig.baseURL;
 // 都道府県一覧のエンドポイントを構築
 const PREFECTURES_ENDPOINT = `${API_BASE_URL}/prefectures`;
@@ -44,10 +44,13 @@ describe("useGetPrefectures", () => {
     // API設定から構築したエンドポイントを使用
     server.use(
       http.get(PREFECTURES_ENDPOINT, () => {
-        return HttpResponse.json([
-          { prefCode: 1, prefName: "北海道" },
-          { prefCode: 13, prefName: "東京都" },
-        ]);
+        return HttpResponse.json({
+          message: "正常に取得しました",
+          result: [
+            { prefCode: 1, prefName: "北海道" },
+            { prefCode: 13, prefName: "東京都" },
+          ],
+        });
       }),
     );
 
@@ -95,10 +98,13 @@ describe("useGetPrefectures", () => {
     // キャッシュテスト用のレスポンス
     server.use(
       http.get(PREFECTURES_ENDPOINT, () => {
-        return HttpResponse.json([
-          { prefCode: 1, prefName: "北海道" },
-          { prefCode: 2, prefName: "青森県" },
-        ]);
+        return HttpResponse.json({
+          message: "正常に取得しました",
+          result: [
+            { prefCode: 1, prefName: "北海道" },
+            { prefCode: 2, prefName: "青森県" },
+          ],
+        });
       }),
     );
 

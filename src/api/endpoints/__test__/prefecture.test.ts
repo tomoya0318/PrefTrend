@@ -20,10 +20,13 @@ describe("Prefecture API", () => {
       // 環境設定から構築したエンドポイントを使用
       server.use(
         http.get(PREFECTURES_ENDPOINT, () => {
-          return HttpResponse.json([
-            { prefCode: 1, prefName: "北海道" },
-            { prefCode: 13, prefName: "東京都" },
-          ]);
+          return HttpResponse.json({
+            message: "正常に取得しました",
+            result: [
+              { prefCode: 1, prefName: "北海道" },
+              { prefCode: 13, prefName: "東京都" },
+            ],
+          });
         }),
       );
 
