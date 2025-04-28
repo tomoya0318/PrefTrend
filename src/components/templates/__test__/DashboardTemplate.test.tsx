@@ -1,18 +1,36 @@
 import { render, screen } from "@testing-library/react";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { Prefecture } from "../../../types/domain/prefecture";
 import type { DashboardTemplateProps } from "../DashboardTemplate";
 import { DashboardTemplate } from "../DashboardTemplate";
 
-import "@testing-library/jest-dom";
+// モックハンドラーをテスト外で定義
+const mockOnPrefectureChange = vi.fn();
+
 // PrefectureCheckboxListをモック化
-jest.mock("../../organisms/PrefectureCheckboxList", () => ({
-  PrefectureCheckboxList: ({ prefectures, checkedPrefCodes }: DashboardTemplateProps) => (
-    <div data-testid="prefecture-checkbox-list">
-      <span data-testid="prefectures-count">{prefectures.length}</span>
-      <span data-testid="checked-count">{checkedPrefCodes.length}</span>
-    </div>
-  ),
+vi.mock("../../organisms/PrefectureCheckboxList", () => ({
+  PrefectureCheckboxList: ({
+    prefectures,
+    checkedPrefCodes,
+    onPrefectureChange,
+  }: DashboardTemplateProps) => {
+    // モックコンポーネントがレンダリングされた時にonPrefectureChangeを1回呼び出す
+    // これによりpropsとして伝達されているか確認できる
+    if (onPrefectureChange) {
+      // このテスト用の処理をするボタンを追加
+      return (
+        <div data-testid="prefecture-checkbox-list">
+          <span data-testid="prefectures-count">{prefectures.length}</span>
+          <span data-testid="checked-count">{checkedPrefCodes.length}</span>
+          <button data-testid="test-handler-button" onClick={() => onPrefectureChange(1, true)}>
+            Test Handler
+          </button>
+        </div>
+      );
+    }
+    return null;
+  },
 }));
 
 describe("DashboardTemplate component", () => {
@@ -25,11 +43,11 @@ describe("DashboardTemplate component", () => {
   const defaultProps = {
     prefectures: mockPrefectures,
     checkedPrefCodes: [],
-    onPrefectureChange: jest.fn(),
+    onPrefectureChange: mockOnPrefectureChange,
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("タイトルが正しく表示される", () => {
@@ -56,21 +74,15 @@ describe("DashboardTemplate component", () => {
   });
 
   test("onPrefectureChangeハンドラが正しく伝達される", () => {
-    // モックの挙動を確認するためのセットアップ
-    const mockHandler = jest.fn();
-    jest.mock("../../organisms/PrefectureCheckboxList", () => ({
-      PrefectureCheckboxList: (props: DashboardTemplateProps) => {
-        // ハンドラが呼ばれた時の検証用に呼び出しをトラッキング
-        props.onPrefectureChange(1, true);
-        return <div data-testid="mock-component">Mocked Component</div>;
-      },
-    }));
+    render(<DashboardTemplate {...defaultProps} />);
 
-    render(<DashboardTemplate {...defaultProps} onPrefectureChange={mockHandler} />);
+    // テスト用ボタンをクリックしてハンドラが呼ばれるかテスト
+    const button = screen.getByTestId("test-handler-button");
+    button.click();
 
-    // 実際にはこのテストは機能しない可能性があります。モックの再定義がJestの制限によりうまく動作しないため、
-    // 実際にはjest.mockの外側で検証メカニズムを実装するか、別のアプローチが必要かもしれません。
-    // このテストはpropsの伝達の考え方を示すための参考として記載しています。
+    // ハンドラが正しく呼ばれたか確認
+    expect(mockOnPrefectureChange).toHaveBeenCalledTimes(1);
+    expect(mockOnPrefectureChange).toHaveBeenCalledWith(1, true);
   });
 
   test("メインコンテナにスタイルが適用されている", () => {

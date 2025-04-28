@@ -1,19 +1,18 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { CheckboxProps } from "../Checkbox";
 import { Checkbox } from "../Checkbox";
 
-import "@testing-library/jest-dom";
-
 describe("Checkbox component", () => {
   const defaultProps: CheckboxProps = {
     checked: false,
-    onChange: jest.fn(),
+    onChange: vi.fn(),
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("正しくレンダリングされる", () => {
@@ -30,7 +29,7 @@ describe("Checkbox component", () => {
   });
 
   test("クリック時に正しい値でonChangeが呼ばれる", async () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const user = userEvent.setup();
 
     const { rerender } = render(
@@ -55,7 +54,7 @@ describe("Checkbox component", () => {
   });
 
   test("disabled propがtrueの場合は無効になる", async () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const user = userEvent.setup();
 
     render(<Checkbox checked={false} disabled={true} onChange={onChange} />);
@@ -85,7 +84,7 @@ describe("Checkbox component", () => {
   });
 
   test("キーボード操作をサポートする", async () => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const user = userEvent.setup();
 
     render(
@@ -111,7 +110,7 @@ describe("Checkbox component", () => {
   test("外部ラベルとidを介して正しくリンクする", async () => {
     const id = "test-checkbox-id";
     const labelText = "チェックボックスラベル";
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const user = userEvent.setup();
 
     render(
