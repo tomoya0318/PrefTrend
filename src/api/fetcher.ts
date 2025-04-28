@@ -2,8 +2,8 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 // デフォルト値を設定（環境変数から、またはテスト時に差し替え可能）
 export const defaultConfig = {
-  baseURL: process.env.VITE_API_URL || "",
-  apiKey: process.env.VITE_API_KEY || "",
+  baseURL: import.meta.env.VITE_API_URL || "",
+  apiKey: import.meta.env.VITE_API_KEY || "",
 };
 
 // エラーレスポンスの型定義
