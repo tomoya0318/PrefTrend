@@ -1,24 +1,11 @@
 import { useState } from "react";
 
-import { Prefecture } from "../../types/domain/prefecture";
+import { useGetPrefectures } from "../../hooks/useGetPrefectures";
 import { DashboardTemplate } from "../templates/DashboardTemplate";
 
-const mockPrefectures: Prefecture[] = [
-  { prefCode: 1, prefName: "北海道" },
-  { prefCode: 2, prefName: "青森県" },
-  { prefCode: 3, prefName: "岩手県" },
-  { prefCode: 4, prefName: "宮城県" },
-  { prefCode: 5, prefName: "秋田県" },
-  { prefCode: 6, prefName: "山形県" },
-  { prefCode: 7, prefName: "福島県" },
-  { prefCode: 8, prefName: "茨城県" },
-  { prefCode: 9, prefName: "栃木県" },
-  { prefCode: 10, prefName: "群馬県" },
-];
-
 export function Dashboard() {
-  // todo: 後でfetchしてくる
-  const prefectures: Prefecture[] = mockPrefectures;
+  // React Queryを使用して都道府県データを取得
+  const { prefectures, isLoading, error } = useGetPrefectures();
   const [checkedPrefCodes, setCheckedPrefCodes] = useState<number[]>([]);
 
   const handlePrefectureChange = (prefCode: number, checked: boolean) => {
@@ -28,6 +15,55 @@ export function Dashboard() {
       setCheckedPrefCodes(checkedPrefCodes.filter((code) => code !== prefCode));
     }
   };
+
+  // ローディング中の表示
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
+          <p className="text-lg">データを読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // エラー時の表示
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center text-red-600">
+          <h2 className="mb-2 text-xl font-bold">エラーが発生しました</h2>
+          <p>{error instanceof Error ? error.message : "データの取得に失敗しました"}</p>
+          <button
+            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            onClick={() => window.location.reload()}
+          >
+            再読み込み
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // データがない場合の表示
+  if (!prefectures || prefectures.length === 0) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg">都道府県データが見つかりませんでした</p>
+          <button
+            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+            onClick={() => window.location.reload()}
+          >
+            再読み込み
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // データがロードできた場合、テンプレートを表示
   return (
     <DashboardTemplate
       checkedPrefCodes={checkedPrefCodes}
