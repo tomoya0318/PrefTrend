@@ -1,14 +1,13 @@
 // filepath: /Users/tomoya-n/dev/PrefTrend/src/components/pages/__test__/Dashboard.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import type { DashboardTemplateProps } from "../../templates/DashboardTemplate";
 import { Dashboard } from "../Dashboard";
 
-import "@testing-library/jest-dom";
-
 // DashboardTemplateをモック化
-jest.mock("../../templates/DashboardTemplate", () => ({
+vi.mock("../../templates/DashboardTemplate", () => ({
   DashboardTemplate: ({
     prefectures,
     checkedPrefCodes,
@@ -37,7 +36,7 @@ jest.mock("../../templates/DashboardTemplate", () => ({
 
 describe("Dashboard component", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("初期状態では選択された都道府県がない", () => {

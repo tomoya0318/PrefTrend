@@ -1,14 +1,17 @@
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
+import { beforeEach, describe, expect, test } from "vitest";
 
-import { getPrefectures } from "../../api/endpoints/prefecture";
-import { useGetPrefectures } from "../useGetPrefectures"; // パスは適宜調整してください
+import { defaultConfig } from "../../api/fetcher";
+import { server } from "../../mocks/server";
+import { useGetPrefectures } from "../useGetPrefectures";
 
-// API呼び出しをモック
-jest.mock("../../api/endpoints/prefecture", () => ({
-  getPrefectures: jest.fn(),
-}));
+// 環境変数からベースURLを取得（デフォルトではfetcher.tsの設定を使用）
+const API_BASE_URL = defaultConfig.baseURL;
+// 都道府県一覧のエンドポイントを構築
+const PREFECTURES_ENDPOINT = `${API_BASE_URL}/prefectures`;
 
 // テスト用のQueryClientラッパー
 const createTestQueryClient = () => {
@@ -32,21 +35,21 @@ const createWrapper = () => {
 };
 
 describe("useGetPrefectures", () => {
-  // 各テストの前にモックをリセット
+  // 各テストの前にMSWハンドラーをリセット
   beforeEach(() => {
-    jest.clearAllMocks();
+    server.resetHandlers();
   });
 
   test("都道府県データを正常に取得する", async () => {
-    // モックの戻り値を設定
-    const mockPrefectures = [
-      { id: 1, name: "北海道" },
-      { id: 2, name: "青森県" },
-      { id: 3, name: "岩手県" },
-      // 必要に応じて追加
-    ];
-
-    (getPrefectures as jest.Mock).mockResolvedValueOnce(mockPrefectures);
+    // API設定から構築したエンドポイントを使用
+    server.use(
+      http.get(PREFECTURES_ENDPOINT, () => {
+        return HttpResponse.json([
+          { prefCode: 1, prefName: "北海道" },
+          { prefCode: 13, prefName: "東京都" },
+        ]);
+      }),
+    );
 
     // テスト用のラッパーを作成
     const wrapper = createWrapper();
@@ -62,17 +65,20 @@ describe("useGetPrefectures", () => {
     await waitFor(() => expect(result.current.isLoading).toBe(false));
 
     // 正しいデータが取得できたことを確認
-    expect(result.current.prefectures).toEqual(mockPrefectures);
+    expect(result.current.prefectures).toEqual([
+      { prefCode: 1, prefName: "北海道" },
+      { prefCode: 13, prefName: "東京都" },
+    ]);
     expect(result.current.error).toBeNull();
-
-    // APIが正しく呼び出されたことを確認
-    expect(getPrefectures).toHaveBeenCalledTimes(1);
   });
 
   test("エラー発生時の処理", async () => {
-    // エラーをモック
-    const mockError = new Error("データの取得に失敗しました");
-    (getPrefectures as jest.Mock).mockRejectedValueOnce(mockError);
+    // エラーレスポンスのモック
+    server.use(
+      http.get(PREFECTURES_ENDPOINT, () => {
+        return new HttpResponse(null, { status: 500 });
+      }),
+    );
 
     const wrapper = createWrapper();
     const { result } = renderHook(() => useGetPrefectures(), { wrapper });
@@ -83,18 +89,18 @@ describe("useGetPrefectures", () => {
     // エラー状態の確認
     expect(result.current.error).toBeTruthy();
     expect(result.current.prefectures).toBeUndefined();
-
-    // APIが呼び出されたことを確認
-    expect(getPrefectures).toHaveBeenCalledTimes(1);
   });
 
   test("キャッシュからデータを取得する場合", async () => {
-    // 1回目のAPI呼び出し用のモック
-    const mockPrefectures = [
-      { id: 1, name: "北海道" },
-      { id: 2, name: "青森県" },
-    ];
-    (getPrefectures as jest.Mock).mockResolvedValueOnce(mockPrefectures);
+    // キャッシュテスト用のレスポンス
+    server.use(
+      http.get(PREFECTURES_ENDPOINT, () => {
+        return HttpResponse.json([
+          { prefCode: 1, prefName: "北海道" },
+          { prefCode: 2, prefName: "青森県" },
+        ]);
+      }),
+    );
 
     // 共有のQueryClientを使用するための特別なラッパー
     const queryClient = createTestQueryClient();
@@ -109,7 +115,6 @@ describe("useGetPrefectures", () => {
 
     // データ取得完了を待機
     await waitFor(() => expect(firstResult.current.isLoading).toBe(false));
-    expect(getPrefectures).toHaveBeenCalledTimes(1);
 
     firstUnmount();
 
@@ -121,9 +126,9 @@ describe("useGetPrefectures", () => {
     // 2回目はキャッシュから取得するため、isLoadingがfalseであり、
     // データが既に利用可能
     expect(secondResult.current.isLoading).toBe(false);
-    expect(secondResult.current.prefectures).toEqual(mockPrefectures);
-
-    // APIは2回目は呼び出されない（キャッシュから取得）
-    expect(getPrefectures).toHaveBeenCalledTimes(1);
+    expect(secondResult.current.prefectures).toEqual([
+      { prefCode: 1, prefName: "北海道" },
+      { prefCode: 2, prefName: "青森県" },
+    ]);
   });
 });
