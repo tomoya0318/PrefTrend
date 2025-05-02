@@ -20,10 +20,14 @@ vi.mock("../../organisms/PrefectureCheckboxList", () => ({
     if (onPrefectureChange) {
       // このテスト用の処理をするボタンを追加
       return (
-        <div data-testid="prefecture-checkbox-list">
-          <span data-testid="prefectures-count">{prefectures.length}</span>
-          <span data-testid="checked-count">{checkedPrefCodes.length}</span>
-          <button data-testid="test-handler-button" onClick={() => onPrefectureChange(1, true)}>
+        <div className="prefecture-checkbox-list">
+          <span className="prefectures-count">{prefectures.length}</span>
+          <span className="checked-count">{checkedPrefCodes.length}</span>
+          <button
+            aria-label="テストハンドラー"
+            className="test-handler-button"
+            onClick={() => onPrefectureChange(1, true)}
+          >
             Test Handler
           </button>
         </div>
@@ -67,17 +71,15 @@ describe("DashboardTemplate component", () => {
     render(<DashboardTemplate {...defaultProps} checkedPrefCodes={checkedPrefCodes} />);
 
     // モック化したコンポーネントに正しいデータが渡されているか確認
-    expect(screen.getByTestId("prefectures-count").textContent).toBe(
-      String(mockPrefectures.length),
-    );
-    expect(screen.getByTestId("checked-count").textContent).toBe(String(checkedPrefCodes.length));
+    expect(screen.getByText(String(mockPrefectures.length))).toHaveClass("prefectures-count");
+    expect(screen.getByText(String(checkedPrefCodes.length))).toHaveClass("checked-count");
   });
 
   test("onPrefectureChangeハンドラが正しく伝達される", () => {
     render(<DashboardTemplate {...defaultProps} />);
 
     // テスト用ボタンをクリックしてハンドラが呼ばれるかテスト
-    const button = screen.getByTestId("test-handler-button");
+    const button = screen.getByRole("button", { name: "テストハンドラー" });
     button.click();
 
     // ハンドラが正しく呼ばれたか確認

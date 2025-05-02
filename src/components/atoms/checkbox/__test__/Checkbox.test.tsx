@@ -33,9 +33,9 @@ describe("Checkbox component", () => {
     const user = userEvent.setup();
 
     const { rerender } = render(
-      <Checkbox checked={false} data-testid="test-checkbox" onChange={onChange} />,
+      <Checkbox aria-label="テストチェックボックス" checked={false} onChange={onChange} />,
     );
-    const checkbox = screen.getByTestId("test-checkbox");
+    const checkbox = screen.getByRole("checkbox");
 
     // 最初のクリック: false -> true
     await user.click(checkbox);
@@ -45,7 +45,7 @@ describe("Checkbox component", () => {
     // Reactの実際の動作では、propsを更新する必要があるため、
     // 再レンダリングをシミュレートします
     onChange.mockClear();
-    rerender(<Checkbox checked={true} data-testid="test-checkbox" onChange={onChange} />);
+    rerender(<Checkbox aria-label="テストチェックボックス" checked={true} onChange={onChange} />);
 
     // 2回目のクリック: true -> false
     await user.click(checkbox);

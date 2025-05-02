@@ -7,7 +7,6 @@ export interface CheckboxProps {
   disabled?: boolean;
   className?: string;
   "aria-label"?: string;
-  "data-testid"?: string;
 }
 
 /**
@@ -18,7 +17,6 @@ export interface CheckboxProps {
  * @param disabled - 無効状態
  * @param className - 追加のCSSクラス
  * @param ariaLabel - アクセシビリティラベル
- * @param dataTestId - テスト用のdata属性
  * @param props - その他のプロパティ
  */
 export function Checkbox({
@@ -28,7 +26,6 @@ export function Checkbox({
   disabled = false,
   className = "",
   "aria-label": ariaLabel,
-  "data-testid": dataTestId,
   ...props
 }: CheckboxProps) {
   // チェック状態変更のハンドラー
@@ -41,7 +38,6 @@ export function Checkbox({
       aria-label={ariaLabel}
       checked={checked}
       className={`h-4 w-4 rounded border-gray-300 text-primary transition-all focus:ring-2 focus:ring-primary ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:border-primary"} ${className} `}
-      data-testid={dataTestId}
       disabled={disabled}
       id={id}
       type="checkbox"
