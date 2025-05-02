@@ -41,16 +41,31 @@ describe("Prefecture API", () => {
       expect(result.length).toBe(2);
     });
 
-    it("API呼び出しが失敗した場合にエラーをスローすること", async () => {
+    it("API呼び出しが失敗した場合にエラーがスローされること", async () => {
       // エラーレスポンスを設定
       server.use(
         http.get(PREFECTURES_ENDPOINT, () => {
-          return new HttpResponse(null, { status: 500 });
+          return new HttpResponse(null, {
+            status: 500,
+            statusText: "Internal Server Error",
+          });
         }),
       );
 
       // APIを呼び出し、エラーがスローされることを確認
       await expect(getPrefectures()).rejects.toThrow();
+    });
+
+    it("ネットワークエラーの場合に汎用エラーメッセージがスローされること", async () => {
+      // ネットワークエラーをシミュレート
+      server.use(
+        http.get(PREFECTURES_ENDPOINT, () => {
+          return HttpResponse.error();
+        }),
+      );
+
+      // APIを呼び出し、特定のエラーメッセージがスローされることを確認
+      await expect(getPrefectures()).rejects.toThrow("予期しないエラーが発生しました");
     });
   });
 });

@@ -1,4 +1,5 @@
 import { Prefecture } from "../../types/domain/prefecture";
+import { isApiError } from "../../utils/typeGuards";
 import { fetcher } from "../fetcher";
 
 interface PrefectureResponse {
@@ -8,6 +9,14 @@ interface PrefectureResponse {
 
 // 都道府県一覧を取得するAPI
 export const getPrefectures = async (): Promise<Prefecture[]> => {
-  const response = await fetcher.get<PrefectureResponse>("/prefectures");
-  return response.data.result;
+  try {
+    const response = await fetcher.get<PrefectureResponse>("/prefectures");
+    return response.data.result;
+  } catch (error) {
+    if (isApiError(error)) {
+      throw error;
+    }
+    // 未知のエラーの場合は汎用エラーとして再スロー
+    throw new Error("予期しないエラーが発生しました");
+  }
 };
