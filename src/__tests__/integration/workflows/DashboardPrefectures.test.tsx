@@ -6,9 +6,12 @@ import { http, HttpResponse } from "msw";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { defaultConfig } from "../../../api/fetcher";
+import { ErrorMessage } from "../../../components/molecules/ErrorMessage";
+import { Loading } from "../../../components/molecules/Loading";
 import { DashboardTemplate } from "../../../components/templates/DashboardTemplate";
 import { useGetPrefectures } from "../../../hooks/useGetPrefectures";
 import { server } from "../../../mocks/server";
+import { isApiError } from "../../../utils/typeGuards";
 
 // テスト用のラッパーコンポーネント
 function TestComponent() {
@@ -23,9 +26,40 @@ function TestComponent() {
     }
   };
 
-  if (isLoading) return <div>ローディング中...</div>;
-  if (error) return <div>エラーが発生しました</div>;
-  if (!prefectures) return <div>データがありません</div>;
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loading size="lg" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        {isApiError(error) ? (
+          <ErrorMessage error={error} onClick={() => window.location.reload()} />
+        ) : (
+          <ErrorMessage
+            message="予期せぬエラーが発生しました"
+            onClick={() => window.location.reload()}
+          />
+        )}
+      </div>
+    );
+  }
+
+  if (!prefectures || prefectures.length === 0) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <ErrorMessage
+          message="都道府県データが見つかりませんでした"
+          title="データが見つかりません"
+          onClick={() => window.location.reload()}
+        />
+      </div>
+    );
+  }
 
   return (
     <DashboardTemplate
@@ -80,7 +114,7 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     render(<TestComponent />, { wrapper: wrapper });
 
     // ローディング表示を確認
-    expect(screen.getByText("ローディング中...")).toBeInTheDocument();
+    expect(screen.getByText("データを読み込み中...")).toBeInTheDocument();
 
     // データが取得され表示されるのを待つ
     await waitFor(() => {
@@ -150,7 +184,7 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     render(<TestComponent />, { wrapper: wrapper });
 
     // ローディング表示を確認
-    expect(screen.getByText("ローディング中...")).toBeInTheDocument();
+    expect(screen.getByText("データを読み込み中...")).toBeInTheDocument();
 
     // エラーメッセージが表示されるのを待つ
     await waitFor(() => {

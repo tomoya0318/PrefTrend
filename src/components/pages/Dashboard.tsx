@@ -1,6 +1,9 @@
 import { useState } from "react";
 
 import { useGetPrefectures } from "../../hooks/useGetPrefectures";
+import { isApiError } from "../../utils/typeGuards";
+import { ErrorMessage } from "../molecules/ErrorMessage";
+import { Loading } from "../molecules/Loading";
 import { DashboardTemplate } from "../templates/DashboardTemplate";
 
 export function Dashboard() {
@@ -20,28 +23,17 @@ export function Dashboard() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
-          <p className="text-lg">データを読み込み中...</p>
-        </div>
+        <Loading size="lg" />
       </div>
     );
   }
 
   // エラー時の表示
-  if (error) {
+  if (error && isApiError(error)) {
+    console.error("Error fetching prefectures:", error);
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-center text-red-600">
-          <h2 className="mb-2 text-xl font-bold">エラーが発生しました</h2>
-          <p>{error instanceof Error ? error.message : "データの取得に失敗しました"}</p>
-          <button
-            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-            onClick={() => window.location.reload()}
-          >
-            再読み込み
-          </button>
-        </div>
+        <ErrorMessage error={error} onClick={() => window.location.reload()} />
       </div>
     );
   }
@@ -50,15 +42,11 @@ export function Dashboard() {
   if (!prefectures || prefectures.length === 0) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg">都道府県データが見つかりませんでした</p>
-          <button
-            className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-            onClick={() => window.location.reload()}
-          >
-            再読み込み
-          </button>
-        </div>
+        <ErrorMessage
+          message="都道府県データが見つかりませんでした"
+          title="データが見つかりません"
+          onClick={() => window.location.reload()}
+        />
       </div>
     );
   }

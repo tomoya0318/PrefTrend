@@ -83,4 +83,29 @@ describe("ErrorMessage component", () => {
     await user.keyboard("{Enter}");
     expect(onClick).toHaveBeenCalledTimes(1);
   });
+
+  test("カスタムタイトルとメッセージが表示される", () => {
+    const customTitle = "データが見つかりません";
+    const customMessage = "都道府県データが見つかりませんでした";
+
+    render(<ErrorMessage message={customMessage} title={customTitle} onClick={vi.fn()} />);
+
+    expect(screen.getByText(customTitle)).toBeInTheDocument();
+    expect(screen.getByText(customMessage)).toBeInTheDocument();
+  });
+
+  test("errorとmessageが両方指定された場合、messageが優先される", () => {
+    const customMessage = "カスタムエラーメッセージ";
+
+    render(<ErrorMessage error={defaultProps.error} message={customMessage} onClick={vi.fn()} />);
+
+    expect(screen.getByText(customMessage)).toBeInTheDocument();
+    expect(screen.queryByText(defaultProps.error?.message ?? "")).not.toBeInTheDocument();
+  });
+
+  test("errorもmessageも指定されない場合、デフォルトメッセージが表示される", () => {
+    render(<ErrorMessage onClick={vi.fn()} />);
+
+    expect(screen.getByText("不明なエラーが発生しました")).toBeInTheDocument();
+  });
 });
