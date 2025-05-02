@@ -20,8 +20,16 @@
   --text-light: #6b7280;
 
   /* プライマリカラー */
-  --color-primary: #2563eb;
-  --color-secondary: #1e40af;
+  --color-primary: #2563eb; /* blue-600 */
+  --color-primary-hover: #1d4ed8; /* blue-700 */
+  --color-primary-active: #1e3a8a; /* blue-800 */
+  --color-primary-light: #93c5fd; /* blue-300 フォーカス用*/
+
+  /* セカンダリカラー */
+  --color-secondary: #4b5563; /* gray-600 */
+  --color-secondary-hover: #374151; /* gray-700 */
+  --color-secondary-active: #1f2937; /* gray-800 */
+  --color-secondary-light: #9ca3af; /* green-400 フォーカス用*/
 
   /* グラフカラー */
   --color-graph-1: #3b82f6;
@@ -54,7 +62,14 @@
 
   /* プライマリカラー */
   --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-active: var(--color-primary-active);
+  --color-primary-light: var(--color-primary-light);
+  /* セカンダリカラー */
   --color-secondary: var(--color-secondary);
+  --color-secondary-hover: var(--color-secondary-hover);
+  --color-secondary-active: var(--color-secondary-active);
+  --color-secondary-light: var(--color-secondary-light);
 
   /* グラフカラー */
   --color-graph-1: var(--color-graph-1);
