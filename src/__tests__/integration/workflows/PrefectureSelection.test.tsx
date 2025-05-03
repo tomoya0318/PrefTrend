@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { defaultConfig } from "../../../api/fetcher";
 import { ErrorMessage } from "../../../components/molecules/ErrorMessage";
 import { Loading } from "../../../components/molecules/Loading";
-import { DashboardTemplate } from "../../../components/templates/DashboardTemplate";
+import { PrefectureCheckbox } from "../../../components/molecules/PrefectureCheckbox";
 import { useGetPrefectures } from "../../../hooks/useGetPrefectures";
 import { server } from "../../../mocks/server";
 import { isApiError } from "../../../utils/typeGuards";
@@ -62,15 +62,34 @@ function TestComponent() {
   }
 
   return (
-    <DashboardTemplate
-      checkedPrefCodes={checkedPrefCodes}
-      prefectures={prefectures}
-      onPrefectureChange={handlePrefectureChange}
-    />
+    <div className="space-y-4 p-4" data-testid="prefecture-list">
+      <h2 className="text-xl font-bold">都道府県選択</h2>
+      <div className="flex flex-wrap gap-2">
+        {prefectures.map((prefecture) => (
+          <PrefectureCheckbox
+            key={prefecture.prefCode}
+            checked={checkedPrefCodes.includes(prefecture.prefCode)}
+            prefecture={prefecture}
+            onChange={(prefCode: number, checked: boolean) =>
+              handlePrefectureChange(prefCode, checked)
+            }
+          />
+        ))}
+      </div>
+      <div data-testid="selected-prefectures">
+        選択中:{" "}
+        {checkedPrefCodes
+          .map((code) => {
+            const pref = prefectures.find((p) => p.prefCode === code);
+            return pref ? pref.prefName : "";
+          })
+          .join(", ")}
+      </div>
+    </div>
   );
 }
 
-describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
+describe("useGetPrefectures と PrefectureCheckbox の統合テスト", () => {
   // 各テストの前後でMSWハンドラーをリセット
   beforeEach(() => {
     server.resetHandlers();
@@ -80,7 +99,7 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     server.resetHandlers();
   });
 
-  // 各テストで新しいQueryClientを作成
+  // テスト用のQueryClientProviderラッパー
   const createWrapper = () => {
     const queryClient = new QueryClient({
       defaultOptions: {
@@ -96,7 +115,7 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     );
   };
 
-  it("都道府県データを取得して表示する", async () => {
+  it("都道府県データを取得してPrefectureCheckboxとして表示する", async () => {
     // 正常なレスポンスをモック
     server.use(
       http.get(`${defaultConfig.baseURL}/prefectures`, () => {
@@ -105,29 +124,33 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
           result: [
             { prefCode: 1, prefName: "北海道" },
             { prefCode: 13, prefName: "東京都" },
+            { prefCode: 27, prefName: "大阪府" },
           ],
         });
       }),
     );
 
     const wrapper = createWrapper();
-    render(<TestComponent />, { wrapper: wrapper });
+    render(<TestComponent />, { wrapper });
 
     // ローディング表示を確認
     expect(screen.getByText("データを読み込み中...")).toBeInTheDocument();
 
     // データが取得され表示されるのを待つ
     await waitFor(() => {
-      expect(screen.getByText("北海道")).toBeInTheDocument();
+      expect(screen.getByText("都道府県選択")).toBeInTheDocument();
     });
-    expect(screen.getByText("東京都")).toBeInTheDocument();
 
-    // チェックボックスが2つあることを確認
-    const checkboxes = screen.getAllByRole("checkbox");
-    expect(checkboxes).toHaveLength(2);
+    // 各都道府県のチェックボックスが表示されていることを確認
+    expect(screen.getByLabelText("北海道を選択")).toBeInTheDocument();
+    expect(screen.getByLabelText("東京都を選択")).toBeInTheDocument();
+    expect(screen.getByLabelText("大阪府を選択")).toBeInTheDocument();
+
+    // 初期状態では何も選択されていないことを確認
+    expect(screen.getByTestId("selected-prefectures").textContent).toBe("選択中: ");
   });
 
-  it("複数の都道府県を選択できる", async () => {
+  it("チェックボックスをクリックして都道府県を選択・解除できる", async () => {
     const user = userEvent.setup();
 
     // 正常なレスポンスをモック
@@ -144,36 +167,42 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     );
 
     const wrapper = createWrapper();
-    render(<TestComponent />, { wrapper: wrapper });
+    render(<TestComponent />, { wrapper });
 
     // データが表示されるのを待つ
     await waitFor(() => {
-      expect(screen.getByText("北海道")).toBeInTheDocument();
-      expect(screen.getByText("東京都")).toBeInTheDocument();
+      expect(screen.getByText("都道府県選択")).toBeInTheDocument();
     });
 
-    // 北海道と東京都のチェックボックスを特定
+    // 北海道のチェックボックスをクリック
     const hokkaidoCheckbox = screen.getByLabelText("北海道を選択");
-    const tokyoCheckbox = screen.getByLabelText("東京都を選択");
-
-    // 両方チェック
     await user.click(hokkaidoCheckbox);
+
+    // 選択状態が更新されることを確認
+    expect(screen.getByTestId("selected-prefectures").textContent).toBe("選択中: 北海道");
+    expect(hokkaidoCheckbox).toBeChecked();
+
+    // 東京都も選択
+    const tokyoCheckbox = screen.getByLabelText("東京都を選択");
     await user.click(tokyoCheckbox);
 
-    // 両方チェックされていることを確認
-    expect(hokkaidoCheckbox).toBeChecked();
+    // 選択状態が更新されることを確認（順序は考慮）
+    const selectedContent = screen.getByTestId("selected-prefectures").textContent;
+    expect(selectedContent).toContain("北海道");
+    expect(selectedContent).toContain("東京都");
     expect(tokyoCheckbox).toBeChecked();
 
-    // 北海道のみチェックを外す
+    // 北海道の選択を解除
     await user.click(hokkaidoCheckbox);
 
-    // 北海道のチェックが外れ、東京都はチェックされたままであることを確認
+    // 選択状態が更新されることを確認
+    expect(screen.getByTestId("selected-prefectures").textContent).toBe("選択中: 東京都");
     expect(hokkaidoCheckbox).not.toBeChecked();
     expect(tokyoCheckbox).toBeChecked();
   });
 
   it("APIエラー時にエラーメッセージを表示する", async () => {
-    // 一時的にエラーを返すハンドラーでモックを上書き
+    // エラーを返すハンドラーでモック
     server.use(
       http.get(`${defaultConfig.baseURL}/prefectures`, () => {
         return HttpResponse.error();
@@ -181,7 +210,7 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     );
 
     const wrapper = createWrapper();
-    render(<TestComponent />, { wrapper: wrapper });
+    render(<TestComponent />, { wrapper });
 
     // ローディング表示を確認
     expect(screen.getByText("データを読み込み中...")).toBeInTheDocument();
@@ -189,6 +218,26 @@ describe("DashboardTemplate と useGetPrefectures の統合テスト", () => {
     // エラーメッセージが表示されるのを待つ
     await waitFor(() => {
       expect(screen.getByText("エラーが発生しました")).toBeInTheDocument();
+    });
+  });
+
+  it("空のデータが返された場合、適切なメッセージを表示する", async () => {
+    // 空のデータを返すハンドラーでモック
+    server.use(
+      http.get(`${defaultConfig.baseURL}/prefectures`, () => {
+        return HttpResponse.json({
+          message: "正常に取得しました",
+          result: [],
+        });
+      }),
+    );
+
+    const wrapper = createWrapper();
+    render(<TestComponent />, { wrapper });
+
+    // エラーメッセージが表示されるのを待つ
+    await waitFor(() => {
+      expect(screen.getByText("都道府県データが見つかりませんでした")).toBeInTheDocument();
     });
   });
 });

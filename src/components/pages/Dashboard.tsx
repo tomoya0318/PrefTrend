@@ -1,6 +1,5 @@
-import { useState } from "react";
-
 import { useGetPrefectures } from "../../hooks/useGetPrefectures";
+import { usePrefecturePopulation } from "../../hooks/usePrefecturePopulation";
 import { isApiError } from "../../utils/typeGuards";
 import { ErrorMessage } from "../molecules/ErrorMessage";
 import { Loading } from "../molecules/Loading";
@@ -8,19 +7,24 @@ import { DashboardTemplate } from "../templates/DashboardTemplate";
 
 export function Dashboard() {
   // React Queryを使用して都道府県データを取得
-  const { prefectures, isLoading, error, refetch } = useGetPrefectures();
-  const [checkedPrefCodes, setCheckedPrefCodes] = useState<number[]>([]);
+  const {
+    prefectures,
+    isLoading: isPrefLoading,
+    error: prefError,
+    refetch: prefRefech,
+  } = useGetPrefectures();
 
-  const handlePrefectureChange = (prefCode: number, checked: boolean) => {
-    if (checked) {
-      setCheckedPrefCodes([...checkedPrefCodes, prefCode]);
-    } else {
-      setCheckedPrefCodes(checkedPrefCodes.filter((code) => code !== prefCode));
-    }
-  };
+  // 都道府県選択状態をURLクエリパラメータで管理
+  const {
+    checkedPrefCodes,
+    handlePrefectureChange,
+    populationData,
+    isLoading: isPopulationLoading,
+    hasError: populationHasError,
+  } = usePrefecturePopulation(prefectures || [], "総人口");
 
-  // ローディング中の表示
-  if (isLoading) {
+  // 都道府県または人口データのどちらかがロード中の場合
+  if (isPrefLoading || (checkedPrefCodes.length > 0 && isPopulationLoading)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loading size="lg" />
@@ -28,12 +32,23 @@ export function Dashboard() {
     );
   }
 
-  // エラー時の表示
-  if (error && isApiError(error)) {
-    console.error("Error fetching prefectures:", error);
+  // 都道府県データ取得のエラー時の表示
+  if (prefError && isApiError(prefError)) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <ErrorMessage error={error} onClick={() => refetch()} />
+        <ErrorMessage error={prefError} onClick={() => prefRefech()} />
+      </div>
+    );
+  }
+
+  // 人口データ取得のエラー時の表示（都道府県が選択されている場合のみ）
+  if (checkedPrefCodes.length > 0 && populationHasError) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <ErrorMessage
+          message="人口データの取得中にエラーが発生しました"
+          onClick={() => window.location.reload()}
+        />
       </div>
     );
   }
@@ -45,7 +60,7 @@ export function Dashboard() {
         <ErrorMessage
           message="都道府県データが見つかりませんでした"
           title="データが見つかりません"
-          onClick={() => refetch()}
+          onClick={() => prefRefech()}
         />
       </div>
     );
@@ -55,6 +70,7 @@ export function Dashboard() {
   return (
     <DashboardTemplate
       checkedPrefCodes={checkedPrefCodes}
+      populationData={populationData}
       prefectures={prefectures}
       onPrefectureChange={handlePrefectureChange}
     />
