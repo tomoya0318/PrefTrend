@@ -21,8 +21,12 @@ vi.mock("../../organisms/PrefectureCheckboxList", () => ({
       // このテスト用の処理をするボタンを追加
       return (
         <div className="prefecture-checkbox-list">
-          <span className="prefectures-count">{prefectures.length}</span>
-          <span className="checked-count">{checkedPrefCodes.length}</span>
+          <span aria-label="都道府県の総数" className="prefectures-count">
+            {prefectures.length}
+          </span>
+          <span aria-label="選択済み都道府県数" className="checked-count">
+            {checkedPrefCodes.length}
+          </span>
           <button
             aria-label="テストハンドラー"
             className="test-handler-button"
@@ -57,13 +61,13 @@ describe("DashboardTemplate component", () => {
   test("タイトルが正しく表示される", () => {
     render(<DashboardTemplate {...defaultProps} />);
 
-    expect(screen.getByText("title")).toBeInTheDocument();
+    expect(screen.getByLabelText("ダッシュボードタイトル")).toHaveTextContent("title");
   });
 
   test("サブタイトル「都道府県」が表示される", () => {
     render(<DashboardTemplate {...defaultProps} />);
 
-    expect(screen.getByText("都道府県")).toBeInTheDocument();
+    expect(screen.getByLabelText("都道府県セクション")).toHaveTextContent("都道府県");
   });
 
   test("PrefectureCheckboxListコンポーネントに正しいpropsが渡される", () => {
@@ -71,8 +75,12 @@ describe("DashboardTemplate component", () => {
     render(<DashboardTemplate {...defaultProps} checkedPrefCodes={checkedPrefCodes} />);
 
     // モック化したコンポーネントに正しいデータが渡されているか確認
-    expect(screen.getByText(String(mockPrefectures.length))).toHaveClass("prefectures-count");
-    expect(screen.getByText(String(checkedPrefCodes.length))).toHaveClass("checked-count");
+    expect(screen.getByLabelText("都道府県の総数")).toHaveTextContent(
+      String(mockPrefectures.length),
+    );
+    expect(screen.getByLabelText("選択済み都道府県数")).toHaveTextContent(
+      String(checkedPrefCodes.length),
+    );
   });
 
   test("onPrefectureChangeハンドラが正しく伝達される", () => {
@@ -88,10 +96,10 @@ describe("DashboardTemplate component", () => {
   });
 
   test("メインコンテナにスタイルが適用されている", () => {
-    const { container } = render(<DashboardTemplate {...defaultProps} />);
+    render(<DashboardTemplate {...defaultProps} />);
 
     // メインのdivが適切なスタイルクラスを持っているか確認
-    const mainDiv = container.firstChild as HTMLElement;
+    const mainDiv = screen.getByLabelText("ダッシュボード");
     expect(mainDiv).toHaveClass("mx-10");
     expect(mainDiv).toHaveClass("my-10");
     expect(mainDiv).toHaveClass("border-2");
@@ -101,7 +109,7 @@ describe("DashboardTemplate component", () => {
   test("タイトルに適切なスタイルが適用されている", () => {
     render(<DashboardTemplate {...defaultProps} />);
 
-    const heading = screen.getByText("title");
+    const heading = screen.getByLabelText("ダッシュボードタイトル");
     expect(heading).toHaveClass("mb-5");
     expect(heading).toHaveClass("border-b-2");
     expect(heading).toHaveClass("p-5");
