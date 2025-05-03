@@ -1,6 +1,5 @@
-import { useState } from "react";
-
 import { useGetPrefectures } from "../../hooks/useGetPrefectures";
+import { usePrefectureSelection } from "../../hooks/usePrefectureSelection";
 import { isApiError } from "../../utils/typeGuards";
 import { ErrorMessage } from "../molecules/ErrorMessage";
 import { Loading } from "../molecules/Loading";
@@ -9,15 +8,9 @@ import { DashboardTemplate } from "../templates/DashboardTemplate";
 export function Dashboard() {
   // React Queryを使用して都道府県データを取得
   const { prefectures, isLoading, error, refetch } = useGetPrefectures();
-  const [checkedPrefCodes, setCheckedPrefCodes] = useState<number[]>([]);
 
-  const handlePrefectureChange = (prefCode: number, checked: boolean) => {
-    if (checked) {
-      setCheckedPrefCodes([...checkedPrefCodes, prefCode]);
-    } else {
-      setCheckedPrefCodes(checkedPrefCodes.filter((code) => code !== prefCode));
-    }
-  };
+  // 都道府県選択状態をURLクエリパラメータで管理
+  const { checkedPrefCodes, handlePrefectureChange } = usePrefectureSelection();
 
   // ローディング中の表示
   if (isLoading) {
