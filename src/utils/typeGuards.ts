@@ -1,4 +1,4 @@
-import { ApiError, ZodError } from "../types/errors";
+import { ApiError, ZodError } from "@/types/errors";
 
 export function isApiError(error: unknown): error is ApiError {
   return (

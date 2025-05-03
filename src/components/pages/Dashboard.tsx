@@ -1,9 +1,10 @@
-import { useGetPrefectures } from "../../hooks/useGetPrefectures";
-import { usePrefecturePopulation } from "../../hooks/usePrefecturePopulation";
-import { isApiError } from "../../utils/typeGuards";
-import { ErrorMessage } from "../molecules/ErrorMessage";
-import { Loading } from "../molecules/Loading";
-import { DashboardTemplate } from "../templates/DashboardTemplate";
+import { ErrorMessage } from "@/components/molecules/ErrorMessage";
+import { Loading } from "@/components/molecules/Loading";
+import { DashboardTemplate } from "@/components/templates/DashboardTemplate";
+
+import { useGetPrefectures } from "@/hooks/useGetPrefectures";
+import { usePrefecturePopulation } from "@/hooks/usePrefecturePopulation";
+import { isApiError } from "@/utils/typeGuards";
 
 export function Dashboard() {
   // React Queryを使用して都道府県データを取得

@@ -1,7 +1,8 @@
-import { ResultWithPrefCode } from "../hooks/useGetPopulation";
-import { PopulationByYear } from "../types/domain/chart";
-import { Population, PopulationCategory } from "../types/domain/population";
-import { Prefecture } from "../types/domain/prefecture";
+import { PopulationByYear } from "@/types/domain/chart";
+import { Population, PopulationCategory } from "@/types/domain/population";
+import { Prefecture } from "@/types/domain/prefecture";
+
+import { ResultWithPrefCode } from "@/hooks/useGetPopulation";
 
 interface PopulationByPrefName {
   prefCode: number;

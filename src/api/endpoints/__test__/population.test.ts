@@ -1,10 +1,12 @@
 import { http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
-import { server } from "../../../mocks/server";
-import { isApiError, isZodError } from "../../../utils/typeGuards";
+import { isApiError, isZodError } from "@/utils/typeGuards";
+
 import fetcher from "../../fetcher";
 import { getPopulation } from "../population";
+
+import { server } from "@/mocks/server";
 
 describe("getPopulation", () => {
   // テスト実行前にサーバーを開始

@@ -9,8 +9,9 @@ import {
   YAxis,
 } from "recharts";
 
-import { PopulationByYear } from "../../../types/domain/chart";
-import { formatPopulation, formatTooltipValue } from "../../../utils/formatters";
+import { PopulationByYear } from "@/types/domain/chart";
+
+import { formatPopulation, formatTooltipValue } from "@/utils/formatters";
 
 export interface ChartLineProps {
   dataKey: string;

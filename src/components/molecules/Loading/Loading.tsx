@@ -1,4 +1,4 @@
-import { Spinner } from "../../atoms/spinner";
+import { Spinner } from "@/components/atoms/spinner";
 
 export interface LoadingProps {
   size?: "sm" | "md" | "lg";
