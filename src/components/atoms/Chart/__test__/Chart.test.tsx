@@ -105,7 +105,7 @@ describe("Chart Component", () => {
   it("renders YAxis with default label and formatter", () => {
     render(<Chart {...props} />);
     const yAxis = screen.getByTestId("y-axis");
-    expect(yAxis).toHaveAttribute("data-label", "人口数");
+    expect(yAxis).toHaveAttribute("data-label", "人口数(万人)");
     expect(yAxis).toHaveAttribute("data-formatter", "function");
   });
 
