@@ -18,6 +18,9 @@ describe("PrefectureCheckboxList component", () => {
     prefectures: mockPrefectures,
     checkedPrefCodes: [],
     onPrefectureChange: vi.fn(),
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
   };
 
   beforeEach(() => {
@@ -65,7 +68,10 @@ describe("PrefectureCheckboxList component", () => {
     render(
       <PrefectureCheckboxList
         checkedPrefCodes={[]}
+        error={null}
+        isLoading={false}
         prefectures={mockPrefectures}
+        refetch={vi.fn()}
         onPrefectureChange={onPrefectureChange}
       />,
     );
@@ -86,7 +92,10 @@ describe("PrefectureCheckboxList component", () => {
     render(
       <PrefectureCheckboxList
         checkedPrefCodes={[1]} // 北海道はチェック済み
+        error={null}
+        isLoading={false}
         prefectures={mockPrefectures}
+        refetch={vi.fn()}
         onPrefectureChange={onPrefectureChange}
       />,
     );
@@ -105,7 +114,10 @@ describe("PrefectureCheckboxList component", () => {
     render(
       <PrefectureCheckboxList
         checkedPrefCodes={[]}
+        error={null}
+        isLoading={false}
         prefectures={[]}
+        refetch={vi.fn()}
         onPrefectureChange={defaultProps.onPrefectureChange}
       />,
     );

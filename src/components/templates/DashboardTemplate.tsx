@@ -1,13 +1,17 @@
 import { PopulationByYear } from "@/types/domain/chart";
 import { Prefecture } from "@/types/domain/prefecture";
+import { ApiError } from "@/types/errors";
 
 import { MultiLineChart } from "@/components/molecules/MultiLineChart/MultiLineChart";
 import { PrefectureCheckboxList } from "@/components/organisms/PrefectureCheckboxList";
 
 export interface DashboardTemplateProps {
-  prefectures: Prefecture[];
+  prefectures?: Prefecture[];
   checkedPrefCodes: number[];
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
+  isPrefLoading: boolean;
+  isPrefError: ApiError | null;
+  isPrefRefetch: () => void;
   populationData: PopulationByYear[];
 }
 
@@ -15,6 +19,9 @@ export function DashboardTemplate({
   prefectures,
   checkedPrefCodes,
   onPrefectureChange,
+  isPrefLoading,
+  isPrefError,
+  isPrefRefetch,
   populationData,
 }: DashboardTemplateProps) {
   return (
@@ -34,7 +41,10 @@ export function DashboardTemplate({
         </h2>
         <PrefectureCheckboxList
           checkedPrefCodes={checkedPrefCodes}
+          error={isPrefError}
+          isLoading={isPrefLoading}
           prefectures={prefectures}
+          refetch={isPrefRefetch}
           onPrefectureChange={onPrefectureChange}
         />
         <div className="mb-8">
