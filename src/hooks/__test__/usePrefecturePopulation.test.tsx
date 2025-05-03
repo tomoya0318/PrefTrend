@@ -4,10 +4,12 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 
-import { defaultConfig } from "../../api/fetcher";
-import { server } from "../../mocks/server";
-import { Prefecture } from "../../types/domain/prefecture";
+import { Prefecture } from "@/types/domain/prefecture";
+
 import { usePrefecturePopulation } from "../usePrefecturePopulation";
+
+import { defaultConfig } from "@/api/fetcher";
+import { server } from "@/mocks/server";
 
 // 実際のAPIエンドポイントを構築
 const API_BASE_URL = defaultConfig.baseURL;

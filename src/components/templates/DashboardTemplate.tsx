@@ -1,7 +1,8 @@
-import { PopulationByYear } from "../../types/domain/chart";
-import { Prefecture } from "../../types/domain/prefecture";
-import { MultiLineChart } from "../molecules/MultiLineChart/MultiLineChart";
-import { PrefectureCheckboxList } from "../organisms/PrefectureCheckboxList";
+import { PopulationByYear } from "@/types/domain/chart";
+import { Prefecture } from "@/types/domain/prefecture";
+
+import { MultiLineChart } from "@/components/molecules/MultiLineChart/MultiLineChart";
+import { PrefectureCheckboxList } from "@/components/organisms/PrefectureCheckboxList";
 
 export interface DashboardTemplateProps {
   prefectures: Prefecture[];

@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
-import { ApiResponse } from "../types/api";
-import { PopulationCompositionPerYear } from "../types/domain/population";
+import { ApiResponse } from "@/types/api";
+import { PopulationCompositionPerYear } from "@/types/domain/population";
 
 // mockデータ用の都道府県コードをキーとする人口データマップ
 interface PopulationDataMap {

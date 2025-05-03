@@ -1,9 +1,10 @@
 import { http, HttpResponse } from "msw";
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { server } from "../../../mocks/server";
-import { defaultConfig } from "../../fetcher";
 import { getPrefectures } from "../prefecture";
+
+import { defaultConfig } from "@/api/fetcher";
+import { server } from "@/mocks/server";
 
 // 環境設定からAPIエンドポイントを構築
 const API_BASE_URL = defaultConfig.baseURL;

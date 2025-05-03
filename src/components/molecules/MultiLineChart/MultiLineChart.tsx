@@ -1,6 +1,7 @@
-import { PopulationByYear } from "../../../types/domain/chart";
-import { Chart } from "../../atoms/Chart";
-import { ChartLineProps } from "../../atoms/Chart";
+import { PopulationByYear } from "@/types/domain/chart";
+
+import { Chart } from "@/components/atoms/Chart";
+import { ChartLineProps } from "@/components/atoms/Chart";
 
 export interface MultiLineChartProps {
   data: PopulationByYear[];

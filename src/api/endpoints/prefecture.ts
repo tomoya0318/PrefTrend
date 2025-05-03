@@ -1,7 +1,9 @@
-import { ApiResponse } from "../../types/api";
-import { Prefecture } from "../../types/domain/prefecture";
-import { isApiError } from "../../utils/typeGuards";
-import { fetcher } from "../fetcher";
+import { ApiResponse } from "@/types/api";
+import { Prefecture } from "@/types/domain/prefecture";
+
+import { isApiError } from "@/utils/typeGuards";
+
+import { fetcher } from "@/api/fetcher";
 
 // 都道府県一覧を取得するAPI
 export const getPrefectures = async (): Promise<Prefecture[]> => {
