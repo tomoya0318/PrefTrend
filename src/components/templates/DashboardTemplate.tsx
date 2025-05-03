@@ -1,16 +1,20 @@
+import { PopulationByYear } from "../../types/domain/chart";
 import { Prefecture } from "../../types/domain/prefecture";
+import { MultiLineChart } from "../molecules/MultiLineChart/MultiLineChart";
 import { PrefectureCheckboxList } from "../organisms/PrefectureCheckboxList";
 
 export interface DashboardTemplateProps {
   prefectures: Prefecture[];
   checkedPrefCodes: number[];
   onPrefectureChange: (prefCode: number, checked: boolean) => void;
+  populationData: PopulationByYear[];
 }
 
 export function DashboardTemplate({
   prefectures,
   checkedPrefCodes,
   onPrefectureChange,
+  populationData,
 }: DashboardTemplateProps) {
   return (
     <div aria-label="ダッシュボード" className="mx-10 my-10 items-center border-2 border-primary">
@@ -18,7 +22,7 @@ export function DashboardTemplate({
         aria-label="ダッシュボードタイトル"
         className="mb-5 border-b-2 border-primary p-5 text-2xl text-primary"
       >
-        title
+        都道府県別人口推移
       </h1>
       <main>
         <h2
@@ -32,6 +36,23 @@ export function DashboardTemplate({
           prefectures={prefectures}
           onPrefectureChange={onPrefectureChange}
         />
+        <div className="mb-8">
+          <h2
+            aria-label="人口推移チャートセクション"
+            className="mb-4 ml-2 inline-block w-auto border-2 border-secondary p-2"
+          >
+            人口推移
+          </h2>
+          <div className="mt-4 rounded-lg border border-gray-200 p-4">
+            {populationData.length > 0 ? (
+              <MultiLineChart data={populationData} />
+            ) : (
+              <p className="py-8 text-center text-lg text-secondary">
+                都道府県を選択すると人口推移グラフが表示されます
+              </p>
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );
