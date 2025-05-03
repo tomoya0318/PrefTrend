@@ -7,7 +7,7 @@
 CURRENT_DATE=$(date +%Y-%m-%d)
 
 # デプロイ先の名前
-PROJECT_NAME="PrefTrend"
+PROJECT_NAME="preftrend"
 
 # ビルドディレクトリ
 ASSETS_DIR="./dist"
