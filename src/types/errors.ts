@@ -4,5 +4,19 @@ import { AxiosError } from "axios";
 export interface ApiError {
   status: number | undefined;
   message: string;
-  originalError: AxiosError | Error;
+  originalError: AxiosError | ZodError | Error;
+}
+
+export interface ZodError {
+  success: false;
+  error: {
+    issues: Array<{
+      code: string;
+      expected: string;
+      received: string;
+      path: string[];
+      message: string;
+    }>;
+    name: "ZodError";
+  };
 }
