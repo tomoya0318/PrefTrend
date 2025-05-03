@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
-import { ApiError } from "../types/errors";
-import { isZodError } from "../utils/typeGuards";
+import { ApiError } from "@/types/errors";
+
+import { isZodError } from "@/utils/typeGuards";
 
 // デフォルト値を設定（環境変数から、またはテスト時に差し替え可能）
 export const defaultConfig = {

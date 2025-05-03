@@ -1,7 +1,8 @@
-import { useGetPopulation } from "./useGetPopulation";
-import { usePrefectureSelection } from "./usePrefectureSelection";
-import { Prefecture } from "../types/domain/prefecture";
-import { preparePopulationData } from "../utils/populationFormatteres";
+import { Prefecture } from "@/types/domain/prefecture";
+
+import { useGetPopulation } from "@/hooks/useGetPopulation";
+import { usePrefectureSelection } from "@/hooks/usePrefectureSelection";
+import { preparePopulationData } from "@/utils/populationFormatteres";
 /**
  * 選択された都道府県の人口データを取得するカスタムフック
  * 都道府県の選択とそれに基づく人口データ取得を統合します

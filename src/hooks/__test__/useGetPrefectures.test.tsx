@@ -4,11 +4,14 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { afterAll, afterEach, beforeEach, describe, expect, test } from "vitest";
 
-import { defaultConfig } from "../../api/fetcher";
-import { server } from "../../mocks/server";
-import { ApiError } from "../../types/errors";
-import { isApiError } from "../../utils/typeGuards";
+import { ApiError } from "@/types/errors";
+
+import { isApiError } from "@/utils/typeGuards";
+
 import { useGetPrefectures } from "../useGetPrefectures";
+
+import { defaultConfig } from "@/api/fetcher";
+import { server } from "@/mocks/server";
 
 // 環境変数からベースURLを取得
 const API_BASE_URL = defaultConfig.baseURL;

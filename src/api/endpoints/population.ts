@@ -1,7 +1,9 @@
-import { ApiResponse } from "../../types/api";
-import { PopulationCompositionPerYear } from "../../types/domain/population";
-import { isApiError } from "../../utils/typeGuards";
-import { fetcher } from "../fetcher";
+import { ApiResponse } from "@/types/api";
+import { PopulationCompositionPerYear } from "@/types/domain/population";
+
+import { isApiError } from "@/utils/typeGuards";
+
+import { fetcher } from "@/api/fetcher";
 
 // 都道府県の人口データを取得するAPI
 export const getPopulation = async (prefCode: number): Promise<PopulationCompositionPerYear> => {
