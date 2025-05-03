@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
-import { beforeEach, describe, expect, test } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, test } from "vitest";
 
 import { defaultConfig } from "../../api/fetcher";
 import { server } from "../../mocks/server";
@@ -37,9 +37,16 @@ const createWrapper = () => {
 };
 
 describe("useGetPrefectures", () => {
-  // 各テストの前にMSWハンドラーをリセット
   beforeEach(() => {
+    server.listen();
+  });
+
+  afterEach(() => {
     server.resetHandlers();
+  });
+
+  afterAll(() => {
+    server.close();
   });
 
   test("都道府県データを正常に取得する", async () => {
@@ -166,5 +173,60 @@ describe("useGetPrefectures", () => {
       { prefCode: 1, prefName: "北海道" },
       { prefCode: 2, prefName: "青森県" },
     ]);
+  });
+
+  test("refetch関数でデータを再取得できる", async () => {
+    // 1回目のレスポンス
+    server.use(
+      http.get(PREFECTURES_ENDPOINT, () => {
+        return HttpResponse.json({
+          message: "正常に取得しました",
+          result: [
+            { prefCode: 1, prefName: "北海道" },
+            { prefCode: 13, prefName: "東京都" },
+          ],
+        });
+      }),
+    );
+
+    const wrapper = createWrapper();
+    const { result } = renderHook(() => useGetPrefectures(), { wrapper });
+
+    // 最初のデータ取得完了を待機
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.prefectures).toEqual([
+      { prefCode: 1, prefName: "北海道" },
+      { prefCode: 13, prefName: "東京都" },
+    ]);
+
+    // 2回目のレスポンスを変更（データ更新をシミュレート）
+    server.use(
+      http.get(PREFECTURES_ENDPOINT, () => {
+        return HttpResponse.json({
+          message: "正常に取得しました",
+          result: [
+            { prefCode: 1, prefName: "北海道" },
+            { prefCode: 13, prefName: "東京都" },
+            { prefCode: 27, prefName: "大阪府" }, // 新しいデータ
+          ],
+        });
+      }),
+    );
+
+    // refetch関数を呼び出し
+    result.current.refetch();
+
+    // 再取得完了後のデータ確認
+    await waitFor(() => {
+      expect(result.current.prefectures?.length).toBe(3);
+    });
+
+    // 更新されたデータの検証
+    expect(result.current.prefectures).toEqual([
+      { prefCode: 1, prefName: "北海道" },
+      { prefCode: 13, prefName: "東京都" },
+      { prefCode: 27, prefName: "大阪府" },
+    ]);
+    expect(result.current.error).toBeNull();
   });
 });

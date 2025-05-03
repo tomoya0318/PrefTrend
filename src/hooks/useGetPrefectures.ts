@@ -9,16 +9,16 @@ export function useGetPrefectures() {
     data: prefectures,
     isLoading,
     error,
+    refetch,
   } = useQuery<Prefecture[], ApiError>({
     queryKey: ["prefectures"],
     queryFn: getPrefectures,
-    staleTime: Infinity, // 無期限に鮮度を保つ
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7日間
   });
 
   return {
     prefectures,
     isLoading,
     error,
+    refetch,
   };
 }

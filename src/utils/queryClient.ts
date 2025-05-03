@@ -5,8 +5,8 @@ export const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1, // 1回のリトライを許可
-      staleTime: 1000 * 60 * 5, // 5分
-      gcTime: 1000 * 60 * 15, // 15分
+      staleTime: Infinity, // 人口データは頻繁に変更されないため
+      gcTime: 1000 * 60 * 60 * 24 * 7, // 7日間
     },
   },
 });
