@@ -1,11 +1,12 @@
 import { Prefecture } from "../../../types/domain/prefecture";
-import { Checkbox } from "../../atoms/Checkbox";
+import { Checkbox } from "../../atoms/checkbox/Checkbox";
 
 interface PrefectureCheckboxProps {
   prefecture: Prefecture;
   checked: boolean;
   onChange: (prefCode: number, checked: boolean) => void;
 }
+
 /**
  * 都道府県チェックボックスコンポーネント
  * @param prefecture - 都道府県データを受け取るオブジェクト
