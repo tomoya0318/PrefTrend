@@ -1,0 +1,1 @@
+export { PrefectureCheckbox } from "./PrefectureCheckbox";

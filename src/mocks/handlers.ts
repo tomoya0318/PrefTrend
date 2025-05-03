@@ -1,27 +1,16 @@
 import { http, HttpResponse } from "msw";
 
-import { defaultConfig } from "../api/fetcher";
-import { PopulationData } from "../types/domain/population";
+import { ApiResponse } from "../types/api";
+import { PopulationCompositionPerYear } from "../types/domain/population";
 
 // mockデータ用の都道府県コードをキーとする人口データマップ
 interface PopulationDataMap {
-  [prefCode: string]: PopulationData;
+  [prefCode: string]: PopulationCompositionPerYear;
 }
 
-// 環境設定からAPIのベースURLを取得
-const API_BASE_URL = defaultConfig.baseURL;
-
 export const handlers = [
-  // 都道府県一覧API - 完全なURLパターン
-  http.get(`${API_BASE_URL}/prefectures`, () => {
-    return HttpResponse.json([
-      { prefCode: 1, prefName: "北海道" },
-      { prefCode: 13, prefName: "東京都" },
-    ]);
-  }),
-
-  // 都道府県一覧API - 相対パスパターン（テスト用）
-  http.get("/prefectures", () => {
+  // 都道府県一覧API
+  http.get("*/prefectures", () => {
     return HttpResponse.json([
       { prefCode: 1, prefName: "北海道" },
       { prefCode: 13, prefName: "東京都" },
@@ -29,9 +18,29 @@ export const handlers = [
   }),
 
   // 人口構成API
-  http.get(`${API_BASE_URL}/population/composition/perYear`, ({ request }) => {
+  http.get(`*/population/composition/perYear`, ({ request }) => {
     const url = new URL(request.url);
     const prefCode = url.searchParams.get("prefCode");
+
+    // prefCodeがない場合のエラーレスポンス（実際のAPIに合わせたフォーマット）
+    if (!prefCode) {
+      const zodError = {
+        success: false,
+        error: {
+          issues: [
+            {
+              code: "invalid_type",
+              expected: "string",
+              received: "undefined",
+              path: ["prefCode"],
+              message: "Required",
+            },
+          ],
+          name: "ZodError",
+        },
+      };
+      return HttpResponse.json(zodError, { status: 400 });
+    }
 
     // mockデータ
     const populationData: PopulationDataMap = {
@@ -84,15 +93,15 @@ export const handlers = [
       },
     };
 
-    // prefCodeが存在しても、対応するデータがない場合のデフォルトデータ
-    const defaultData = {
-      boundaryYear: 2020,
-      data: [{ label: "総人口", data: [{ year: 2020, value: 0 }] }],
+    if (!(prefCode in populationData)) {
+      return HttpResponse.json("Not Found", { status: 404 });
+    }
+
+    const response: ApiResponse<PopulationCompositionPerYear> = {
+      message: null,
+      result: populationData[prefCode],
     };
 
-    return HttpResponse.json({
-      message: null,
-      result: prefCode && prefCode in populationData ? populationData[prefCode] : defaultData,
-    });
+    return HttpResponse.json(response);
   }),
 ];

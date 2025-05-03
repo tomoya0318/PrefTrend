@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 import { ApiError } from "../types/errors";
+import { isZodError } from "../utils/typeGuards";
 
 // デフォルト値を設定（環境変数から、またはテスト時に差し替え可能）
 export const defaultConfig = {
@@ -19,8 +20,15 @@ export const handleApiError = (error: AxiosError): ApiError => {
   // ステータスコードに応じたエラーメッセージの設定
   switch (apiError.status) {
     case 400:
-      apiError.message =
-        "必要なパラメータが正しく設定されていません。必須パラメータや形式を確認してください。";
+      // レスポンスデータがZodErrorの場合
+      if (error.response?.data && isZodError(error.response.data)) {
+        apiError.message = "リクエストの形式が正しくありません。";
+        // ZodErrorデータもoriginalErrorとして保持
+        apiError.originalError = error.response.data;
+      } else {
+        apiError.message =
+          "必要なパラメータが正しく設定されていません。必須パラメータや形式を確認してください。";
+      }
       break;
     case 403:
       apiError.message = "APIキーが存在しないか無効です。APIキーの設定を確認してください。";

@@ -12,7 +12,7 @@ export interface PopulationCategory {
 }
 
 // 人口データ
-export interface PopulationData {
+export interface PopulationCompositionPerYear {
   boundaryYear: number;
   data: PopulationCategory[];
 }
