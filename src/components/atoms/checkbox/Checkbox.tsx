@@ -19,7 +19,7 @@ export interface CheckboxProps {
  * @param ariaLabel - アクセシビリティラベル
  * @param props - その他のプロパティ
  */
-export function Checkbox({
+export default function Checkbox({
   id,
   checked,
   onChange,
