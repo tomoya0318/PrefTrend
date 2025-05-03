@@ -50,6 +50,8 @@ export const handleApiError = (error: AxiosError): ApiError => {
 
 // Axiosインスタンスを作成する関数（テスト時にモックしやすい）
 export const createFetcher = (config = defaultConfig): AxiosInstance => {
+  console.log("API URL:", config.baseURL);
+  console.log("API KEY:", config.apiKey);
   const instance = axios.create({
     baseURL: config.baseURL,
     headers: {
