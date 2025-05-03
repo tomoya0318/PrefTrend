@@ -6,6 +6,8 @@ import { beforeEach, describe, expect, test } from "vitest";
 
 import { defaultConfig } from "../../api/fetcher";
 import { server } from "../../mocks/server";
+import { ApiError } from "../../types/errors";
+import { isApiError } from "../../utils/typeGuards";
 import { useGetPrefectures } from "../useGetPrefectures";
 
 // 環境変数からベースURLを取得
@@ -79,7 +81,34 @@ describe("useGetPrefectures", () => {
     // エラーレスポンスのモック
     server.use(
       http.get(PREFECTURES_ENDPOINT, () => {
-        return new HttpResponse(null, { status: 500 });
+        return new HttpResponse(null, {
+          status: 500,
+          statusText: "Internal Server Error",
+        });
+      }),
+    );
+
+    const wrapper = createWrapper();
+    const { result } = renderHook(() => useGetPrefectures(), { wrapper });
+
+    // エラー状態になるまで待機
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    // エラー状態の確認
+    expect(result.current.error).toBeTruthy();
+    // エラーがApiError型であることを確認
+    expect(isApiError(result.current.error)).toBe(true);
+    // ApiError型として扱えることを確認
+    const apiError = result.current.error as ApiError;
+    expect(apiError.status).toBe(500);
+    expect(result.current.prefectures).toBeUndefined();
+  });
+
+  test("ネットワークエラーの場合", async () => {
+    // ネットワークエラーのモック
+    server.use(
+      http.get(PREFECTURES_ENDPOINT, () => {
+        return HttpResponse.error();
       }),
     );
 
@@ -92,6 +121,7 @@ describe("useGetPrefectures", () => {
     // エラー状態の確認
     expect(result.current.error).toBeTruthy();
     expect(result.current.prefectures).toBeUndefined();
+    expect(result.current.error?.message).toBeTruthy();
   });
 
   test("キャッシュからデータを取得する場合", async () => {

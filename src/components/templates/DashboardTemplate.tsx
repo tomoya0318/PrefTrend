@@ -13,10 +13,20 @@ export function DashboardTemplate({
   onPrefectureChange,
 }: DashboardTemplateProps) {
   return (
-    <div className="mx-10 my-10 items-center border-2 border-primary">
-      <h1 className="mb-5 border-b-2 border-primary p-5 text-2xl text-primary">title</h1>
+    <div aria-label="ダッシュボード" className="mx-10 my-10 items-center border-2 border-primary">
+      <h1
+        aria-label="ダッシュボードタイトル"
+        className="mb-5 border-b-2 border-primary p-5 text-2xl text-primary"
+      >
+        title
+      </h1>
       <main>
-        <h2 className="ml-2 inline-block w-auto border-2 border-secondary p-2">都道府県</h2>
+        <h2
+          aria-label="都道府県セクション"
+          className="ml-2 inline-block w-auto border-2 border-secondary p-2"
+        >
+          都道府県
+        </h2>
         <PrefectureCheckboxList
           checkedPrefCodes={checkedPrefCodes}
           prefectures={prefectures}
