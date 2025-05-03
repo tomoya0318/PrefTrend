@@ -1,12 +1,14 @@
 import { ApiResponse } from "../../types/api";
-import { Prefecture } from "../../types/domain/prefecture";
+import { PopulationCompositionPerYear } from "../../types/domain/population";
 import { isApiError } from "../../utils/typeGuards";
 import { fetcher } from "../fetcher";
 
-// 都道府県一覧を取得するAPI
-export const getPrefectures = async (): Promise<Prefecture[]> => {
+// 都道府県の人口データを取得するAPI
+export const getPopulation = async (prefCode: number): Promise<PopulationCompositionPerYear> => {
   try {
-    const response = await fetcher.get<ApiResponse<Prefecture[]>>("/prefectures");
+    const response = await fetcher.get<ApiResponse<PopulationCompositionPerYear>>(
+      `/population/composition/perYear?prefCode=${prefCode}`,
+    );
     return response.data.result;
   } catch (error) {
     if (isApiError(error)) {
