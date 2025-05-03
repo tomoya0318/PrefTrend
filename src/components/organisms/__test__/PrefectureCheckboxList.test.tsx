@@ -2,7 +2,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { Prefecture } from "../../../types/domain/prefecture";
+import { Prefecture } from "@/types/domain/prefecture";
+
 import { PrefectureCheckboxList } from "../PrefectureCheckboxList";
 
 describe("PrefectureCheckboxList component", () => {

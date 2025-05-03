@@ -1,8 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { PopulationByYear } from "../../../../types/domain/chart";
-import * as formatters from "../../../../utils/formatters";
+import { PopulationByYear } from "@/types/domain/chart";
+
+import * as formatters from "@/utils/formatters";
+
 import { Chart, ChartProps } from "../Chart"; // パスは実際のファイル構造に合わせて調整してください
 
 // 新しいモックデータ

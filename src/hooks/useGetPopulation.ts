@@ -1,8 +1,9 @@
 import { useQueries, UseQueryResult } from "@tanstack/react-query";
 
-import { getPopulation } from "../api/endpoints/population";
-import { PopulationCompositionPerYear } from "../types/domain/population";
-import { ApiError } from "../types/errors";
+import { PopulationCompositionPerYear } from "@/types/domain/population";
+import { ApiError } from "@/types/errors";
+
+import { getPopulation } from "@/api/endpoints/population";
 
 export interface ResultWithPrefCode {
   prefCode: number;

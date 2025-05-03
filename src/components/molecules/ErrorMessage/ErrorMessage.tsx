@@ -1,5 +1,6 @@
-import { ApiError } from "../../../types/errors";
-import { Button } from "../../atoms/Button";
+import { ApiError } from "@/types/errors";
+
+import { Button } from "@/components/atoms/Button";
 
 export interface ErrorMessageProps {
   error?: ApiError;

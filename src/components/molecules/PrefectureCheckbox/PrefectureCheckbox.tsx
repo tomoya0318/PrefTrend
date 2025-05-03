@@ -1,6 +1,7 @@
 import { Prefecture } from "../../../types/domain/prefecture";
 import { Checkbox } from "../../atoms/checkbox";
 
+
 interface PrefectureCheckboxProps {
   prefecture: Prefecture;
   checked: boolean;

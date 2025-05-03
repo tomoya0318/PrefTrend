@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getPrefectures } from "../api/endpoints/prefecture";
-import { Prefecture } from "../types/domain/prefecture";
-import { ApiError } from "../types/errors";
+import { Prefecture } from "@/types/domain/prefecture";
+import { ApiError } from "@/types/errors";
+
+import { getPrefectures } from "@/api/endpoints/prefecture";
 
 export function useGetPrefectures() {
   const {
