@@ -4,7 +4,7 @@ import { getPopulation } from "../api/endpoints/population";
 import { PopulationCompositionPerYear } from "../types/domain/population";
 import { ApiError } from "../types/errors";
 
-interface ResultWithPrefCode {
+export interface ResultWithPrefCode {
   prefCode: number;
   data?: PopulationCompositionPerYear;
   isLoading: boolean;

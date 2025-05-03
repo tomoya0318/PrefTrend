@@ -18,13 +18,13 @@ export function Dashboard() {
   const {
     checkedPrefCodes,
     handlePrefectureChange,
-    populationCompositions,
+    populationData,
     isLoading: isPopulationLoading,
     hasError: populationHasError,
-  } = usePrefecturePopulation();
+  } = usePrefecturePopulation(prefectures || [], "総人口");
 
-  // ローディング中の表示
-  if (isPrefLoading) {
+  // 都道府県または人口データのどちらかがロード中の場合
+  if (isPrefLoading || (checkedPrefCodes.length > 0 && isPopulationLoading)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loading size="lg" />
@@ -32,12 +32,23 @@ export function Dashboard() {
     );
   }
 
-  // エラー時の表示
+  // 都道府県データ取得のエラー時の表示
   if (prefError && isApiError(prefError)) {
-    console.error("Error fetching prefectures:", prefError);
     return (
       <div className="flex h-screen items-center justify-center">
         <ErrorMessage error={prefError} onClick={() => prefRefech()} />
+      </div>
+    );
+  }
+
+  // 人口データ取得のエラー時の表示（都道府県が選択されている場合のみ）
+  if (checkedPrefCodes.length > 0 && populationHasError) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <ErrorMessage
+          message="人口データの取得中にエラーが発生しました"
+          onClick={() => window.location.reload()}
+        />
       </div>
     );
   }
@@ -59,6 +70,7 @@ export function Dashboard() {
   return (
     <DashboardTemplate
       checkedPrefCodes={checkedPrefCodes}
+      populationData={populationData}
       prefectures={prefectures}
       onPrefectureChange={handlePrefectureChange}
     />
