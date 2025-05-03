@@ -14,6 +14,8 @@
     "src/**/*.test.tsx",
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx",
+    "src/__tests__/**/*",
     "jest.config.ts"
-  ]
+  ],
+  "exclude": []
 }
