@@ -1,6 +1,5 @@
-import { useState } from "react";
-
 import { useGetPrefectures } from "../../hooks/useGetPrefectures";
+import { usePrefecturePopulation } from "../../hooks/usePrefecturePopulation";
 import { isApiError } from "../../utils/typeGuards";
 import { ErrorMessage } from "../molecules/ErrorMessage";
 import { Loading } from "../molecules/Loading";
@@ -8,19 +7,24 @@ import { DashboardTemplate } from "../templates/DashboardTemplate";
 
 export function Dashboard() {
   // React Queryを使用して都道府県データを取得
-  const { prefectures, isLoading, error, refetch } = useGetPrefectures();
-  const [checkedPrefCodes, setCheckedPrefCodes] = useState<number[]>([]);
+  const {
+    prefectures,
+    isLoading: isPrefLoading,
+    error: prefError,
+    refetch: prefRefech,
+  } = useGetPrefectures();
 
-  const handlePrefectureChange = (prefCode: number, checked: boolean) => {
-    if (checked) {
-      setCheckedPrefCodes([...checkedPrefCodes, prefCode]);
-    } else {
-      setCheckedPrefCodes(checkedPrefCodes.filter((code) => code !== prefCode));
-    }
-  };
+  // 都道府県選択状態をURLクエリパラメータで管理
+  const {
+    checkedPrefCodes,
+    handlePrefectureChange,
+    populationCompositions,
+    isLoading: isPopulationLoading,
+    hasError: populationHasError,
+  } = usePrefecturePopulation();
 
   // ローディング中の表示
-  if (isLoading) {
+  if (isPrefLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loading size="lg" />
@@ -29,11 +33,11 @@ export function Dashboard() {
   }
 
   // エラー時の表示
-  if (error && isApiError(error)) {
-    console.error("Error fetching prefectures:", error);
+  if (prefError && isApiError(prefError)) {
+    console.error("Error fetching prefectures:", prefError);
     return (
       <div className="flex h-screen items-center justify-center">
-        <ErrorMessage error={error} onClick={() => refetch()} />
+        <ErrorMessage error={prefError} onClick={() => prefRefech()} />
       </div>
     );
   }
@@ -45,7 +49,7 @@ export function Dashboard() {
         <ErrorMessage
           message="都道府県データが見つかりませんでした"
           title="データが見つかりません"
-          onClick={() => refetch()}
+          onClick={() => prefRefech()}
         />
       </div>
     );
