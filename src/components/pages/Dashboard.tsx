@@ -8,7 +8,7 @@ import { DashboardTemplate } from "../templates/DashboardTemplate";
 
 export function Dashboard() {
   // React Queryを使用して都道府県データを取得
-  const { prefectures, isLoading, error } = useGetPrefectures();
+  const { prefectures, isLoading, error, refetch } = useGetPrefectures();
   const [checkedPrefCodes, setCheckedPrefCodes] = useState<number[]>([]);
 
   const handlePrefectureChange = (prefCode: number, checked: boolean) => {
@@ -33,7 +33,7 @@ export function Dashboard() {
     console.error("Error fetching prefectures:", error);
     return (
       <div className="flex h-screen items-center justify-center">
-        <ErrorMessage error={error} onClick={() => window.location.reload()} />
+        <ErrorMessage error={error} onClick={() => refetch()} />
       </div>
     );
   }
@@ -45,7 +45,7 @@ export function Dashboard() {
         <ErrorMessage
           message="都道府県データが見つかりませんでした"
           title="データが見つかりません"
-          onClick={() => window.location.reload()}
+          onClick={() => refetch()}
         />
       </div>
     );
