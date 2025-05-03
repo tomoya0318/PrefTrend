@@ -6,11 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:vite": "vite build",
     "lint": "eslint --fix . && prettier --write .",
     "format": "prettier --write .",
     "preview": "vite preview",
     "prepare": "husky",
-    "test": "vitest"
+    "test": "vitest",
+    "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.74.4",
