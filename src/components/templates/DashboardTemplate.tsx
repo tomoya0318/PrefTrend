@@ -27,7 +27,7 @@ export function DashboardTemplate({
       <main>
         <h2
           aria-label="都道府県セクション"
-          className="ml-2 inline-block w-auto border-2 border-secondary p-2"
+          className="mb-3 ml-2 inline-block w-auto border-2 border-secondary p-2"
         >
           都道府県
         </h2>
@@ -39,7 +39,7 @@ export function DashboardTemplate({
         <div className="mb-8">
           <h2
             aria-label="人口推移チャートセクション"
-            className="mb-4 ml-2 inline-block w-auto border-2 border-secondary p-2"
+            className="mt-4 ml-2 inline-block w-auto border-2 border-secondary p-2"
           >
             人口推移
           </h2>
