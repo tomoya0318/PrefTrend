@@ -5,6 +5,9 @@ import { ApiError } from "@/types/errors";
 import { MultiLineChart } from "@/components/molecules/MultiLineChart/MultiLineChart";
 import { PrefectureCheckboxList } from "@/components/organisms/PrefectureCheckboxList";
 
+import { LabeledSelect } from "../molecules/LabeledSelect";
+import { PopulationType } from "../pages/Dashboard";
+
 export interface DashboardTemplateProps {
   prefectures?: Prefecture[];
   checkedPrefCodes: number[];
@@ -13,6 +16,12 @@ export interface DashboardTemplateProps {
   isPrefError: ApiError | null;
   isPrefRefetch: () => void;
   populationData: PopulationByYear[];
+  selectedPopulationType: PopulationType;
+  populationTypeOptions: {
+    value: PopulationType;
+    label: string;
+  }[];
+  onPopulationTypeChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export function DashboardTemplate({
@@ -23,6 +32,9 @@ export function DashboardTemplate({
   isPrefError,
   isPrefRefetch,
   populationData,
+  selectedPopulationType,
+  populationTypeOptions,
+  onPopulationTypeChange,
 }: DashboardTemplateProps) {
   return (
     <div aria-label="ダッシュボード" className="mx-10 my-10 items-center border-2 border-primary">
@@ -32,7 +44,7 @@ export function DashboardTemplate({
       >
         都道府県別人口推移
       </h1>
-      <main>
+      <main className="pl-6">
         <h2
           aria-label="都道府県セクション"
           className="mb-3 ml-2 inline-block w-auto border-2 border-secondary p-2"
@@ -47,13 +59,15 @@ export function DashboardTemplate({
           refetch={isPrefRefetch}
           onPrefectureChange={onPrefectureChange}
         />
-        <div className="mb-8">
-          <h2
-            aria-label="人口推移チャートセクション"
-            className="mt-4 ml-2 inline-block w-auto border-2 border-secondary p-2"
-          >
-            人口推移
-          </h2>
+        <div className="my-5 ml-2">
+          <LabeledSelect
+            className="mb-4"
+            id="populationType"
+            label="人口種別"
+            options={populationTypeOptions}
+            value={selectedPopulationType}
+            onChange={onPopulationTypeChange}
+          />
           <div className="mt-4 rounded-lg border border-gray-200 p-4">
             {populationData.length > 0 ? (
               <MultiLineChart data={populationData} />
