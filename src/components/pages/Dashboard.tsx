@@ -40,10 +40,12 @@ export function Dashboard() {
   return (
     <DashboardTemplate
       checkedPrefCodes={checkedPrefCodes}
+      isPopulationLoading={isPopulationLoading}
       isPrefError={prefError}
       isPrefLoading={isPrefLoading}
       isPrefRefetch={prefRefech}
       populationData={populationData}
+      populationHasError={populationHasError}
       populationTypeOptions={POPULATION_TYPES}
       prefectures={prefectures}
       selectedPopulationType={selectedPopulationType}
