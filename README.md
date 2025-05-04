@@ -1,54 +1,78 @@
-# React + TypeScript + Vite
+# PrefTrend - 都道府県別人口推移可視化アプリ
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 使用技術一覧
+<p style="display: inline">
+  <!-- フロントエンドのフレームワーク一覧 -->
+  <img src="https://img.shields.io/badge/-React-61DAFB.svg?logo=react&style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/-TypeScript-3178C6.svg?logo=typescript&style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/-Vite-646CFF.svg?logo=vite&style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/-Tailwind_CSS-06B6D4.svg?logo=tailwindcss&style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/-React_Query-FF4154.svg?logo=reactquery&style=for-the-badge&logoColor=white">
+  <img src="https://img.shields.io/badge/-Recharts-22B5BF.svg?style=for-the-badge&logoColor=white">
+</p>
 
-Currently, two official plugins are available:
+## 目次
+1. [開発にあたって](#開発にあたって)
+1. [環境](#環境)
+2. [開発環境構築](#開発環境構築)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 開発にあたって
+[http://localhost:5173](http://localhost:5173)で開発用のページにアクセスできます。
 
-## Expanding the ESLint configuration
+## 環境
+| 言語・フレームワーク  | バージョン |
+| --------------------- | ---------- |
+| Node.js               | 22.14.0    |
+| React                 | 19.0.0     |
+| TypeScript            | 5.7.2      |
+| Vite                  | 6.3.1      |
+| Tailwind CSS          | 4.1.4      |
+| recharts              | 2.15.3     |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+その他のパッケージのバージョンは package.json を参照してください
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+## 開発環境構築
+nodeを[環境](#環境)に指定したバージョンで作業を行なってください
+
+1. パッケージのインストール
+```
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+2. localhostの立ち上げ
 ```
+npm run dev
+```
+
+3. テストの実行
+```
+npm test
+```
+
+## アプリケーション構成
+
+このプロジェクトは以下のような構成になっています：
+
+- **src/components**: UIコンポーネント
+  - **atoms**: 最小単位のコンポーネント（Button, Chart, Checkbox, Spinnerなど）
+  - **molecules**: 複数のatomsで構成される中規模コンポーネント（ErrorMessage, Loading, MultiLineChartなど）
+  - **organisms**: ビジネスロジックを含む大規模コンポーネント
+  - **templates**: ページレイアウトを担当するコンポーネント
+  - **pages**: ルーティングされるページコンポーネント
+
+- **src/hooks**: カスタムReactフック
+- **src/api**: APIクライアント
+- **src/types**: 型定義
+- **src/utils**: ユーティリティ関数
+- **src/__tests__**: テストファイル
+
+## コマンド一覧
+
+| コマンド         | 説明                                   |
+| ---------------- | -------------------------------------- |
+| `npm run dev`    | 開発サーバーを起動                     |
+| `npm run build`  | プロダクションビルドを生成             |
+| `npm run lint`   | ESLintとPrettierによるコード整形       |
+| `npm run format` | Prettierによるコード整形               |
+| `npm test`       | テストを実行                           |
+| `npm run deploy` | デプロイスクリプトの実行               |
