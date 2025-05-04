@@ -2,10 +2,10 @@ import { PopulationByYear } from "@/types/domain/chart";
 import { Prefecture } from "@/types/domain/prefecture";
 import { ApiError } from "@/types/errors";
 
-import { MultiLineChart } from "@/components/molecules/MultiLineChart/MultiLineChart";
 import { PrefectureCheckboxList } from "@/components/organisms/PrefectureCheckboxList";
 
 import { LabeledSelect } from "../molecules/LabeledSelect";
+import PopulationChart from "../organisms/PopulationChart";
 import { PopulationType } from "../pages/Dashboard";
 
 export interface DashboardTemplateProps {
@@ -16,6 +16,8 @@ export interface DashboardTemplateProps {
   isPrefError: ApiError | null;
   isPrefRefetch: () => void;
   populationData: PopulationByYear[];
+  isPopulationLoading: boolean;
+  populationHasError: boolean;
   selectedPopulationType: PopulationType;
   populationTypeOptions: {
     value: PopulationType;
@@ -32,6 +34,8 @@ export function DashboardTemplate({
   isPrefError,
   isPrefRefetch,
   populationData,
+  isPopulationLoading,
+  populationHasError,
   selectedPopulationType,
   populationTypeOptions,
   onPopulationTypeChange,
@@ -69,13 +73,11 @@ export function DashboardTemplate({
             onChange={onPopulationTypeChange}
           />
           <div className="mt-4 rounded-lg border border-gray-200 p-4">
-            {populationData.length > 0 ? (
-              <MultiLineChart data={populationData} />
-            ) : (
-              <p className="py-8 text-center text-lg text-secondary">
-                都道府県を選択すると人口推移グラフが表示されます
-              </p>
-            )}
+            <PopulationChart
+              data={populationData}
+              error={populationHasError}
+              isLoading={isPopulationLoading}
+            />
           </div>
         </div>
       </main>
